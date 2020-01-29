@@ -5,19 +5,22 @@ from time import sleep
 IO.setmode(IO.BOARD)
 IO.setwarnings(False)
 
+# Setting motor pins on board
 M1A = 11
 M1B = 13
 M1En = 15
 
+# Set output pins
 IO.setup(M1A,IO.OUT)
 IO.setup(M1B,IO.OUT)
 
+# Set PWM pin
 IO.setup(M1En,IO.OUT)
-
 pwm = IO.PWM(M1En, 200)
 
 
 print "Counterclockwise, Accelerate"
+# Setting A to high and B to low rotates motor Counterclockwise
 IO.output(M1A,IO.HIGH)
 IO.output(M1B,IO.LOW)
 pwm.start(0)
