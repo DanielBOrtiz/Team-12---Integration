@@ -7,9 +7,18 @@ while True:
 		break
 	if userIn.isdigit():
 		num = int(userIn) 
-		for x in range(0, num + 1, int(num/10)):
-			print(x)
-			sleep(0.1)
-	else:
-		print("Hello")
-
+		print(num)
+		sleep(0.1)
+		continue
+	if userIn == 'w' or userIn == 'W':
+		print("Forward")
+		continue
+	if userIn == 's' or userIn == 's':
+		print("Reverse")
+		continue
+	if userIn == 'd' or userIn == 'D':
+		print("Right")
+		continue
+	if userIn == 'a' or userIn == 'A':
+		print("Left")
+		continue

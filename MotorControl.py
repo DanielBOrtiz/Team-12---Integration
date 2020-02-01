@@ -37,6 +37,7 @@ def m1Drxn(drxn):
 	if drxn == 'w' or drxn == 'W':
 		IO.output(M1A, IO.HIGH)
 		IO.output(M1B, IO.LOW)
+
 	if drxn == 's' or drxn == 'S':
 		IO.output(M1A, IO.LOW)
 		IO.output(M1B, IO.HIGH)
@@ -68,14 +69,17 @@ def speedChange(speed):
 
 def servoTurn(drxn):
 	if drxn == 'a' or drxn == 'A':
+		print("Turning Left")
 		for x in range (17, 30, 2):
 			servo.ChangeDutyCycle(30)
 			sleep(0.15)
 	if drxn == 'd' or drxn == 'D':
+		print("Turning Right")
 		for x in range(6, 17, 2):
 			servo.ChangeDutyCycle(23-x)
 			sleep(0.15)
 	if drxn == 'w' or drxn == 'W':
+		print("Straightening Servo")
 		servo.ChangeDutyCycle(17.5)
 
 pwm1.start(0)
@@ -97,11 +101,13 @@ while True:
 	if userIn == 'w' or userIn == 'W':
 		m1Drxn(userIn)
 		m2Drxn(userIn)
+		print("Forward")
 		servoTurn(userIn)
 		continue	
 	elif userIn == 's' or userIn == 's':
 		m1Drxn(userIn)
 		m2Drxn(userIn)
+		print("Reverse")
 		continue
 
 	elif userIn == 'a' or userIn == 'A':
