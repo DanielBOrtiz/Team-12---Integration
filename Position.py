@@ -19,7 +19,7 @@ from time import sleep
 class currentpos():
 	def __init__(self, addr):
 		self.addr = addr
-		self.hedge = MarvelmindHedge(tty = "/dev/ttyACM0", adr=self.addr, debug=False) # create MarvelmindHedge thread
+		self.hedge = MarvelmindHedge(tty = "/dev/ttyACM1", adr=self.addr, debug=False) # create MarvelmindHedge thread
 		self.hedge.start() # start thread
 
 	def position(self):

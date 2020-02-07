@@ -1,11 +1,12 @@
-from Ultrasonic import Ultrasonic
-import time
 import RPi.GPIO as IO
+from Servo import Servo #from servo file import the servo class
+import time
 
-uss = Ultrasonic(11, 13)
-uss.trigsettle()
+servo = Servo(36)
+userIn = input("Cycle: ")
+servo.turn(userIn)
 while True:
-	print("Calculating distance:")
-	print(uss.ping())
-	time.sleep(1)	
-
+	userIn = input("Duty Cycle: ")
+	if type(userIn) == float or type(userIn) == int and 0 <= userIn < 100 and 0.0 <= userIn < 100.0:
+		servo.turn(userIn)
+IO.cleanup()

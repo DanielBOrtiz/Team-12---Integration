@@ -3,7 +3,7 @@ from Ultrasonic import Ultrasonic
 import sys
 from time import sleep
 
-class navigation():
+class Navigation():
 	def __init__(self, addr):
 		self.addr = addr
 		self.uSensor = Ultrasonic(11, 13)
