@@ -11,4 +11,10 @@ class Trig():
 			self.mag = 0.00001
 		ang = degrees(acos(self.xDiff/self.mag))
 		return ang
+	
+	def magnitude(self, xCurrent, yCurrent, xFinal, yFinal):
+		xMagDiff = xFinal - xCurrent
+		yMagDiff = yFinal - yCurrent
+		mag = sqrt(pow(xMagDiff, 2) + pow(yMagDiff, 2))
+		return mag
 
