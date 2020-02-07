@@ -56,6 +56,8 @@ while True:
 			# xFinal and yFinal will be updated to the next waypoint when the rover reaches the first waypoint
 			xFinal = xArr[x]
 			yFinal = yArr[x]
+			print(xArr[x])
+			print(yArr[x])
 
 			# find the angle between the x-axis and the vector that points to the the destination waypoint
 			theta2 = trig.theta(x1, y1, xFinal, yFinal)
@@ -83,8 +85,8 @@ while True:
 			if 0 < error <= 25:
 				if myPos.position()[1] != xFinal-buffer and myPos.position()[2] != yFinal-buffer:
 					if myPos.position()[1] != xFinal+buffer and myPos.position()[2] != yFinal+buffer:
-						print'X: ', myPos.position()[1] 
-						print'Y: ', myPos.position()[2]
+#						print'X: ', myPos.position()[1] 
+#						print'Y: ', myPos.position()[2]
 						print'YEET Left!!', error
 						print'ERROR for Left Turn:', error
 						sleep(0.25)
@@ -93,13 +95,14 @@ while True:
 				if yFinal-buffer <= myPos.position()[2] <= yFinal+buffer:
 					print'Stop!'
 					print'Turn Right!'
-					print'X: ', myPos.position()[1] 
-					print'Y: ', myPos.position()[2]
-					print'THIS IS X:', x
-					print'THIS IS XFINAL:', xFinal
-					print'THIS IS YFINAL:', yFinal
+					print'Current X: ', myPos.position()[1] 
+					print'Current Y: ', myPos.position()[2]
+					print'DESTINATION:', x+1
+					print'yFinal:', yFinal
+					print'yFinal:', yFinal
+					print'WAYPOINT', x, 'REACHED'
 					x += 1
-					sleep(3)
+					sleep(2)
 	
 			else:
 				print'Proceed.'
