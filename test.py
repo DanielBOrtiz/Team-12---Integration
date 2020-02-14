@@ -1,12 +1,9 @@
-import RPi.GPIO as IO
-from Servo import Servo #from servo file import the servo class
-import time
+import serial
 
-servo = Servo(36)
-userIn = input("Cycle: ")
-servo.turn(userIn)
+ser = serial.Serial('/dev/ttyUSB0',9600)
+s = [0]
 while True:
-	userIn = input("Duty Cycle: ")
-	if type(userIn) == float or type(userIn) == int and 0 <= userIn < 100 and 0.0 <= userIn < 100.0:
-		servo.turn(userIn)
-IO.cleanup()
+	read_serial=ser.readline()
+	s[0] = str(int (ser.readline(),16))
+	print s[0]
+	print read_serial

@@ -1,6 +1,8 @@
 from Position import currentpos
 from Ultrasonic import Ultrasonic
+from Servo import Servo
 from trig import Trig
+from math import fabs
 import RPi.GPIO as IO
 import sys
 from time import sleep
@@ -27,7 +29,7 @@ while True:
 
 	for x in range(0, 5):
 		if x == 4:
-			print'Final waypoint reached. We done.'
+			print("Final waypoint reached. We done.")
 			sys.exit()
 			break
 #			x = 0; # if x becomes larger than our array size, restart this loop so it can go in circles around room
@@ -73,8 +75,9 @@ while True:
 				error = theta2 - theta1
 #				mag = trig.magntiude()
 #				print'ERROR:', error
+				servo.turn(31)
 	
-				if -15 <= error < 0: # due to inaccuracy of the beacon we choose to ignore differences in angles above 15 degrees, + and -
+				if -25 <= error < 0: # due to inaccuracy of the beacon we choose to ignore differences in angles above 15 degrees, + and -
 					if myPos.position()[1] != xFinal-buffer and myPos.position()[2] != yFinal-buffer:
 						if myPos.position()[1] != xFinal+buffer and myPos.position()[2] != yFinal+buffer:
 #							print'XFINAL - BUFFER =', xFinal-buffer
@@ -87,15 +90,19 @@ while True:
 #							print'Y: ', myPos.position()[2]
 							print'Correct Right!!'
 							print'ERROR for Right Turn:', error
+							correctionRight = 31 - fabs(0.2333 * error)
+							servo.turn(correctionRight)
 							sleep(0.4)
 
-				if 0 < error <= 15:
+				if 0 < error <= 25:
 					if myPos.position()[1] != xFinal-buffer and myPos.position()[2] != yFinal-buffer:
 						if myPos.position()[1] != xFinal+buffer and myPos.position()[2] != yFinal+buffer:
 #							print'X: ', myPos.position()[1] 
 #							print'Y: ', myPos.position()[2]
 							print'Correct Left!!'
 							print'ERROR for Left Turn:', error
+							correctionLeft = 31 + fabs(0.2333 * error)
+							servo.turn(correctionLeft)
 							sleep(0.4)
 
 				if xFinal-buffer <= myPos.position()[1] <= xFinal+buffer:
@@ -108,9 +115,14 @@ while True:
 						print'xFinal:', xFinal
 						print'yFinal:', yFinal
 						print'WAYPOINT', x+1, 'REACHED'
+						servo.turn(10)
 						x += 1
 						sleep(2)
 						break
 
 				else:
 					print'Proceed.'
+
+
+
+

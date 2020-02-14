@@ -30,7 +30,7 @@ class Servo():
 		self.sigPin = sigPin
 		IO.setup(self.sigPin, IO.OUT)
 		self.pwm = IO.PWM(self.sigPin, 200)
-		self.pwm.start(8.5)
+		self.pwm.start(31)
 
 	def straight(self):
 		self.pwm.ChangeDutyCycle(31)

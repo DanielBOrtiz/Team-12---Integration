@@ -15,5 +15,18 @@ except:
 # Setting up pin modes as if we were in Arduino IDE
 a.pinMode(ledPin, a.OUTPUT)
 a.pinMode(buttonPin, a.INPUT)
-while True:
 
+
+while True:
+	a.digitalWrite(ledPin, a.HIGH)
+	ledState = True
+	print("LED ON")
+	sleep(1)
+	a.digitalWrite(ledPin, a.LOW)
+	ledState = False
+	print("LED  OFF")
+	sleep(1)
+	a.digitalWrite(ledPin, a.HIGH)
+	ledState = True
+	print("LED ON")
+	sleep(1)
