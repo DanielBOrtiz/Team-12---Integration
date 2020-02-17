@@ -27,3 +27,6 @@ class currentpos():
 #		sleep(0.5)
 #		print("X:", pos[1], "Y: ", pos[2])
 		return pos # spit out the full array returned by the Marvelmindhedge fxn
+
+	def hedgeQuit(self):
+		self.hedge.stop()

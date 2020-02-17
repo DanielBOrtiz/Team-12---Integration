@@ -8,8 +8,8 @@
 
 #nav = Navigation(12) # the 12 is the address of our beacon
 #while True:
-#	print'X:', nav.currentpos()[1]
-#	print 'Y:', nav.currentpos()[2]
+#	print'X:', nav.position()[1]
+#	print 'Y:', nav.position()[2]
 
 
 
@@ -23,9 +23,12 @@ class Navigation():
 		self.hedge = MarvelmindHedge(tty = "/dev/ttyACM2", adr=self.addr, debug=False) # create MarvelmindHedge thread
 		self.hedge.start() # start thread
 	
-	def currentpos(self):
-		pos = self.hedge.position()
-		return pos # spit out the full array returned by the Marvelmindhedge fxn
+	def position(self):
+		try:
+			pos = self.hedge.position()
+			return pos # spit out the full array returned by the Marvelmindhedge fxn
+		except KeyboardInterrupt:
+			self.hedge.quit()
 
 	def trigsettle(self, trigPin, echoPin): # call this function only once at the beginning of the code 
 		self.trigPin = trigPin
