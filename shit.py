@@ -1,17 +1,15 @@
-from Navigation import Navigation
-from math import fabs
-from trig import Trig
-import sys
+from nanpy import (ArduinoApi, SerialManager)
 from time import sleep
 
-addr = input("Who is we?")
-nav = Navigation(addr)
-myPos = nav.position()
-trig = Trig()
+#some = serial_manager()
 
-while True:
-	try:
-		myPos
-		print(myPos)
-	except KeyboardInterrupt:
-		sys.exit()
+#serial_manager.connect('/dev/ttyUSB0', 9600)
+
+try:
+	connection = SerialManager(device='/dev/ttyUSB0') # The input to 
+	# serialmanager is the manual way of setting the connection for the 
+	# Arduino. This must be used if we wanna connect the beacon to the Pi
+	a = ArduinoApi(connection = connection)
+	print'Communication with Arduino was successful.'
+except:
+	print'Failed to communicate with Arduino. ):'
