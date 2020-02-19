@@ -1,10 +1,12 @@
 from Position import currentpos
 from time import sleep
+from Navigation import Navigation
 
 addr = input("Who is we?")
-myPos = currentpos(addr)
+nav = Navigation(addr)
+nav.position()
 
 while True:
-    myPos.position()
-    sleep(.5)
-    print'X:',myPos.position()[1], 'Y',myPos.position()[2]  
+	nav.position()
+    	sleep(.5)
+   	print'X:',nav.position()[1], 'Y', nav.position()[2]  

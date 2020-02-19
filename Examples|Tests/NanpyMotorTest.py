@@ -1,3 +1,5 @@
+## MOTOR TEST, THIS SIMPLY SPINS EACH MOTOR TO MAX SPEED IN EACH DIRECTION
+
 from nanpy import (ArduinoApi, SerialManager)
 from time import sleep
 

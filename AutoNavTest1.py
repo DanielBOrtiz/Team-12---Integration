@@ -1,15 +1,42 @@
 ## First iteration of Autonomous Navigation of Rover
 	# Shoutout to Luca Gacy 
 
+from nanpy import (ArduinoApi, SerialManager)
 from Navigation import Navigation
+from MotorClass import Motor
+from Trig import Trig
 from math import fabs
-from trig import Trig
-import sys
 from time import sleep
+import sys
 
+try:
+	connection = SerialManager(device='/dev/ttyUSB0')
+	a = ArduinoApi(connection = connection)
+	print'Arduino communication was successful.'
+except:
+	print'Unable to communicate with Arduino.'
+
+M1En = 6
+M1A = 7
+M1B = 8
+M2En = 11
+M2A = 12
+M2B = 13
+
+motorK = 2
+maxPWM = 255
+
+M1 = Motor("LEFT", M1En, M1A, M1B)
+M2 = Motor("RIGHT", M2En, M2A, M2B)
+
+M1.pinSet(a)
+M2.pinSet(a)
+
+# Ask user to enter current beacon address
 addr = input("Who is we?")
+# Initiate the classes needed for this file
 nav = Navigation(addr)
-myPos = nav.position()
+nav.position() # line that calls the position of the beacon
 trig = Trig()
 
 # coordinates of each waypoint in the room, starting from door side clockwise.
@@ -25,87 +52,131 @@ y2 = 0
 # it will perform some action based off these positions
 buffer = 0.8
 angleBuffer = 45
+error = 0
+correctionError = 0
+
+# Begin rover movement
+M1.directionSet("W", a)
+M2.directionSet("W", a)
+for x in range(0, 52):
+    M1.pwmSet(5*x, a)
+    M2.pwmSet(5*x, a)
+    sleep(0.01)
 
 while True:
-	for x in range(0, 5):
-		if x == 4:
-			print("Final waypoint reached. We done.")
-			sys.exit()
-			break
-#			x = 0; # if x becomes larger than our array size, restart this loop so it can go in circles around room
-		else:
-			while True:
-				# Rover will start, move a lil then start saving points as x1 and y1
-				sleep(0.5)
-# test lines			print(xArr[x])
-# test lines				print(yArr[x])
-	
-				myPos
-				x1 = x2
-				y1 = y2
-				x2 = myPos[1]
-				y2 = myPos[2]
-#				print'X: ', x2 
-#				print'Y: ', y2
+	try:
+		for x in range(0, 5):
+			if (x == 4):
+				print'Final waypoint reached. We done.'
+				next = raw_input('Continue? [y/n]:')
+				if (next == 'y'):
+					x = 0
+					M1.stopAll(a)
+					M2.stopAll(a)
+					#sys.exit()
+					break
+				elif (next == 'n'):
+					print'Exiting program...'
+					M1.stopAll(a)
+					M2.stopAll(a)
+					sys.exit()
+					random = random
+					break
+				else:
+					print'Invalid input entered. Exiting program...'
+					M1.stopAll(a)
+					M2.stopAll(a)
+					random = random
+					break
+			else:
+				while True:
+					sleep(0.5)
+					nav.position()
+					x1 = x2
+					y1 = y2
+					x2 = nav.position()[1]
+					y2 = nav.position()[2]
+					#print'X: ', x2 
+					#print'Y: ', y2
+ 		    			#print(xArr[x])
+ 					#print(yArr[x])
 
-				# The points below are the conditions for the rover to know to set its current position as its new home
-				# and to set the next waypoint's x and y-coordinates to xFinal and yFinal
-				# since it will be starting by the door the next waypoint will be the tape by the machine shop door
-				# xFinal and yFinal will be updated to the next waypoint when the rover reaches the first waypoint
-				xFinal = xArr[x]
-				yFinal = yArr[x]
-#				print(xArr[x])
-#				print(yArr[x])
 
-				# find the angle between the x-axis and the vector created from the starting point to where the rover currently is
-				velocityTheta = trig.theta(x1, y1, x2, y2) # find angle between axis and current velocity vector
+					# The points below are the conditions for the rover to know to set its current position as its new home
+					# and to set the next waypoint's x and y-coordinates to xFinal and yFinal
+					# since it will be starting by the door the next waypoint will be the tape by the machine shop door
+					# xFinal and yFinal will be updated to the next waypoint when the rover reaches the first waypoint
+					xFinal = xArr[x]
+					yFinal = yArr[x]
+		
+					# Find the angle between the x-axis and the vector created by rover's velocity
+					velocityTheta = trig.theta(x1, y1, x2, y2)
 
-				# find the angle between the x-axis and the vector that points to the the destination waypoint
-				waypointTheta = trig.theta(x2, y2, xFinal, yFinal) # find angle between axis and waypoint vector
+					# Find the angle between the x-axis and the waypoint vector
+					waypointTheta = trig.theta(x2, y2, xFinal, yFinal)
 
-				# find the difference between the second angle and the first, this will let the rover know how many degrees to correct
-				error = waypointTheta - velocityTheta
-					
-				if abs(waypointTheta - velocityTheta) < angleBuffer:
+					# Find the difference between the desination theta and velocity theta
 					error = waypointTheta - velocityTheta
 
+					if (abs(error) < angleBuffer):
+						correctionError = waypointTheta - velocityTheta
+						print'Correction Error:', correctionError
+						
+						#if (abs(error) < angleBuffer):
+						#	print'angleBuffer - abs(error)', angleBuffer-abs(error)
+						#	sleep(1)
+						#	error = waypointTheta - velocityTheta
+						#	sleep(1)
+						#	print'Error', error
+					else:
+						print'Error larger than buffer, ignoring error.'
 
-				if xFinal-buffer <= myPos[1] <= xFinal+buffer:
-					if yFinal-buffer <= myPos[2] <= yFinal+buffer:
-						error = 0
-						print'Stop!'
-						print'Turn Right!'
-						print'Current X: ', myPos[1] 
-						print'Current Y: ', myPos[2]
-						print'DESTINATION:', x+1
-						print'xFinal:', xFinal
-						print'yFinal:', yFinal
-						print'WAYPOINT', x+1, 'REACHED'
-						servo.turn(10)
-						x += 1
-						sleep(2)
-						break
+					if (xFinal-buffer <= nav.position()[1] <= xFinal+buffer):
+						if (yFinal-buffer <= nav.position()[2] <= yFinal+buffer):
+							error = 0
+							print'Stop!'
+							for x in range(0, 52):
+								M1.pwmSet(255-5*x, a)
+								M2.pwmSet(255-5*x, a)
+								print(255-5*x)
+								sleep(0.00001)
+							print'Current X:', nav.position()[1], 'Current Y:', nav.position()[2]
+							print'xFinal:', xFinal, 'yFinal:', yFinal
+							print'WAYPOINT:', x+1, 'REACHED'
+							sleep(0.5)
+							print'Turning Right'
+							for x in range(0, 255):
+								M1.pwmSet(x, a)
+								print'Motor 1 PWM:', x
+								sleep(0.01)
+							x += 1
+							sleep(2)
+							print'Proceed.'
+							for x in range(0, 52):
+								M1.pwmSet(5*x, a)
+								M2.pwmSet(5*x, a)
+								sleep(0.0001)
+							sleep(2)
+							break
+					if (correctionError > 0):
+						print'Correct Right!' # Got rid of exclamation points cuz Mackenzie rude af
+						print'ERROR for Right turn:', correctionError
+						rightSlow = 255 - correctionError * motorK
+						print'Decreasing Right Motor:', rightSlow
+						M1.pwmSet(rightSlow, a)
+						M2.pwmSet(maxPWM, a)
 
-				elif error > 0: # due to inaccuracy of the beacon we choose to ignore differences in angles above 15 degrees, + and -
-# Test Line				print'XFINAL - BUFFER =', xFinal-buffer
-# Test Line				print'YFINAL - BUFFER =', yFinal-buffer
-# Test Line				print'XFINAL + BUFFER =', xFinal+buffer
-# Test Line 				print'YFINAL + BUFFER =', yFinal+buffer
-# Test Line				print'THIS IS XFINAL:', xFinal
-# Test Line 				print'THIS IS YFINAL:', yFinal
-# Test Line				print'X: ', myPos[1] 
-# Test Line				print'Y: ', myPos[2]
-					print'Correct Right!!'
-					print'ERROR for Right Turn:', error
-#					sleep(0.4)
+					if (correctionError < 0):
+						print'Correct Left!' 
+						print'ERROR for Left turn:', correctionError
+						leftSlow = 255 + correctionError * motorK # sign here is positive because the angle is negative
+						print'Decreasing Left Motor:', leftSlow
+						M1.pwmSet(maxPWM, a)
+						M2.pwmSet(leftSlow, a)
 
-				elif error < 0:
-#					print'X: ', myPos.position()[1] 
-#					print'Y: ', myPos.position()[2]
-					print'Correct Left!!'
-					print'ERROR for Left Turn:', error
-#					sleep(0.4)
-		
+	except KeyboardInterrupt: 
+		M1.stopAll(a)
+		M2.stopAll(a)
 
-
-
+M1.stopAll(a)
+M2.stopAll(a)
