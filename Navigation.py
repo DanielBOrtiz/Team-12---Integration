@@ -18,17 +18,20 @@ import sys
 from time import sleep
 
 class Navigation():
-	def __init__(self, addr):
-		self.addr = addr
-		self.hedge = MarvelmindHedge(tty = "/dev/ttyACM0", adr=self.addr, debug=False) # create MarvelmindHedge thread
+	def __init__(self):
+		# Manually ask user to enter beacon address and port number for beacon
+		self.addr = input("Who is we? ")
+    		self.conn = input("What ACM port is Marvemind Beacon plugged in to?: ")
+   		self.port = '/dev/ttyACM' + str(self.conn)
+		self.hedge = MarvelmindHedge(tty = self.port, adr=self.addr, debug=False) # create MarvelmindHedge thread
 		self.hedge.start() # start thread
 	
 	def position(self):
-		try:
-			pos = self.hedge.position()
-			return pos # spit out the full array returned by the Marvelmindhedge fxn
-		except KeyboardInterrupt:
-			self.hedge.stop()
+		# try:
+		pos = self.hedge.position()
+		return pos # spit out the full array returned by the Marvelmindhedge fxn
+		# except KeyboardInterrupt:
+			# self.hedge.stop()
 
 	def trigsettle(self, trigPin, echoPin): # call this function only once at the beginning of the code 
 		self.trigPin = trigPin

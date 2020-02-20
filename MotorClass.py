@@ -44,14 +44,14 @@ class Motor():
 				a.digitalWrite(self.bPin, a.LOW)
 				a.digitalWrite(self.aPin, a.HIGH)# CCW
 				a.digitalWrite(self.bPin, a.LOW)
-#				print(self.motor, self.direction)
+				# print(self.motor, self.direction)
 				return "s" # return the directions so we can handle it externally
 			elif (self.direction == "reverse" or self.direction == "s" or self.direction == "S"): 
 				a.digitalWrite(self.aPin, a.LOW)
 				a.digitalWrite(self.bPin, a.LOW)
 				a.digitalWrite(self.aPin, a.LOW)# CW
 				a.digitalWrite(self.bPin, a.HIGH)
-#				print(self.motor, self.direction)
+				# print(self.motor, self.direction)
 				return "w" # return the directions so we can handle it externally
 			else:
 				pass
@@ -63,14 +63,14 @@ class Motor():
 				a.digitalWrite(self.bPin, a.LOW)
 				a.digitalWrite(self.aPin, a.LOW)# CW
 				a.digitalWrite(self.bPin, a.HIGH)
-#				print(self.motor, self.direction)
+				# print(self.motor, self.direction)
 				return "s" # return the directions so we can handle it externally
 			elif (self.direction == "reverse" or self.direction == "s" or self.direction == "S"): 
 				a.digitalWrite(self.aPin, a.LOW)
 				a.digitalWrite(self.bPin, a.LOW)
 				a.digitalWrite(self.aPin, a.HIGH) # CCW
 				a.digitalWrite(self.bPin, a.LOW)
-#				print(self.motor, self.direction)
+				# print(self.motor, self.direction)
 				return "w" # return the directions so we can handle it externally
 			else:
 				print'Incorrect direction input.'

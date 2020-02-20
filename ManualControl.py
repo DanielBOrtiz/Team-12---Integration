@@ -1,12 +1,15 @@
 ## MANUAL CONTROL FUNCTION. CAN BE CALLED WITH
-# manualControl()
+# manualControl(arduinoconnection, motorOne, motorTwo)
 # ADD MANUAL CONTROL CODE INTO THIS FILE
 
-
+## IN ORDER FOR THIS FUNCTION TO WORK PROPERLY ONE MUST HAVE ARDUINOCONNECTION AND MOTOR CLASSES AS INPUTS TO THE FUNCTION
 
 import curses
+import sys
 
-def manualControl():
+from time import sleep
+
+def manualControl(arduinoApi, motorOne, motorTwo, MANUAL): # for consistency it'd be nice to keep the convention as motor one being the left motor
 	# get the curses screen window
 	screen = curses.initscr()
 	# turn off input echoing
@@ -17,34 +20,101 @@ def manualControl():
 	screen.keypad(True)
 	cnt = 0
 
+	MANUALDRIVE = True
+
 	try:	
-   	 while True:
-        	char = screen.getch()
-		if char == ord('y'):
-			cnt = cnt + 1
-			if cnt%2 == 1:
-				screen.addstr(0, 0, 'st auto   ')
-			else:
-				screen.addstr(0, 0, 'st manu   ')
-		if  cnt%2 == 0:
-	        	if char == ord('q'):
-	        		break
-	      	 	elif char == ord('d'): # right
-	        		# print doesn't work with curses, use addstr instead
-				#print('d')
-	        		screen.addstr(0, 0, "right    ")
-	      	  	elif char == ord('a'): # left
-	        		screen.addstr(0, 0, 'left     ')
-	        	elif char == ord('w'): # forwards
-	        		screen.addstr(0, 0, 'forwards  ')
-	      	 	elif char == ord('s'): # backwards
-	        		screen.addstr(0, 0, 'backwards ')
-			elif char == ord('e'): # stop
-				screen.addstr(0, 0, 'stop     ')
-		else:	
-			screen.addstr(0, 0, 'now auto   ')
+   	 	while MANUALDRIVE:
+        		char = screen.getch()
+			if char == ord('y'):
+				cnt = cnt + 1
+				screen.addstr(0, 0, 'Y Pressed.    ')
+				screen.addstr(1, 0, 'Stopping Rover...     ')
+				screen.addstr(1, 0, 'Press again to enable autonomous mode.     ')
+				motorOne.stopAll(arduinoApi)
+				motorTwo.stopAll(arduinoApi)
+				#if cnt%2 == 0:
+				#	screen.addstr(0, 0, 'Going Auto....     ')
+				#	return True
+				#	break
+				#else:
+					#break
+					#screen.addstr(0, 0, 'st manu     ')
+				# Begin rover movement
+				motorOne.directionSet("W", a)
+				motorTwo.directionSet("W", a)
+				for x in range(0, 52):
+				    M1.pwmSet(5*x, a)
+				    M2.pwmSet(5*x, a)
+				    sleep(0.01)
+				MANUALDRIVE = False
+				return True
+				break
+
+			if  cnt%2 == 0:
+	        		if char == ord('q'):
+					motorOne.stopAll(arduinoApi)
+					motorTwo.stopAll(arduinoApi)
+					# Begin rover movement
+					motorOne.directionSet("W", a)
+					motorTwo.directionSet("W", a)
+					for x in range(0, 52):
+				   		motorOne.pwmSet(5*x, a)
+				   		motorTwo.pwmSet(5*x, a)
+				    		sleep(0.01)
+					MANUALDRIVE = False
+	        			break
+	      	 		elif char == ord('d'): # right
+					screen.addstr(0, 0, 'Right Turn    ')
+					motorOne.directionSet("W", arduinoApi)
+					motorTwo.directionSet("S", arduinoApi)
+					for x in range(0, 52):
+						motorOne.pwmSet(5*x, arduinoApi)
+						motorTwo.pwmSet(5*x, arduinoApi)
+						sleep(0.002)
+
+	      		  	elif char == ord('a'): # left
+	        			screen.addstr(0, 0, 'Left Turn     ')
+					motorOne.directionSet("S", arduinoApi)
+					motorTwo.directionSet("W", arduinoApi)
+					for x in range(0, 52):
+						motorOne.pwmSet(5*x, arduinoApi)
+						motorTwo.pwmSet(5*x, arduinoApi)
+						sleep(0.002)
+
+	        		elif char == ord('w'): # forwards
+	        			screen.addstr(0, 0, 'Forwards     ')
+					motorOne.directionSet("W", arduinoApi)
+					motorTwo.directionSet("W", arduinoApi)
+					for x in range(0, 52):
+						motorOne.pwmSet(5*x, arduinoApi)
+						motorTwo.pwmSet(5*x, arduinoApi)
+						sleep(0.002)
+
+		      	 	elif char == ord('s'): # backwards
+	       		 		screen.addstr(0, 0, 'Reverse     ')
+					motorOne.directionSet("S", arduinoApi)
+					motorTwo.directionSet("S", arduinoApi)
+					for x in range(0, 52):
+						motorOne.pwmSet(5*x, arduinoApi)
+						motorTwo.pwmSet(5*x, arduinoApi)
+						sleep(0.002)
+
+
+				elif char == ord('e'): # stop
+					screen.addstr(0, 0, 'Stop     ')
+					motorOne.stopAll(arduinoApi)
+					motorTwo.stopAll(arduinoApi)
+				
+
+			else:	
+				screen.addstr(0, 0, 'now auto   ')
 	finally:
 		# shut down cleanly
 		curses.nocbreak(); screen.keypad(0); curses.echo()
 		curses.endwin()
+		sys.exit()
+		# motorOne.stopAll(arduinoApi)
+		# motorTwo.stopAll(arduinoApi)
+		return True
+
 
