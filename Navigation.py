@@ -21,7 +21,7 @@ class Navigation():
 	def __init__(self):
 		# Manually ask user to enter beacon address and port number for beacon
 		self.addr = input("Who is we? ")
-    		self.conn = input("What ACM port is Marvemind Beacon plugged in to?: ")
+    		self.conn = input("What ACM port is Marvelmind Beacon plugged in to?: ")
    		self.port = '/dev/ttyACM' + str(self.conn)
 		self.hedge = MarvelmindHedge(tty = self.port, adr=self.addr, debug=False) # create MarvelmindHedge thread
 		self.hedge.start() # start thread

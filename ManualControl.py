@@ -30,8 +30,8 @@ def manualControl(arduinoApi, motorOne, motorTwo, MANUAL): # for consistency it'
 				screen.addstr(0, 0, 'Y Pressed.    ')
 				screen.addstr(1, 0, 'Stopping Rover...     ')
 				screen.addstr(1, 0, 'Press again to enable autonomous mode.     ')
-				motorOne.stopAll(arduinoApi)
-				motorTwo.stopAll(arduinoApi)
+				#motorOne.stopAll(arduinoApi)
+				#motorTwo.stopAll(arduinoApi)
 				#if cnt%2 == 0:
 				#	screen.addstr(0, 0, 'Going Auto....     ')
 				#	return True
@@ -40,13 +40,16 @@ def manualControl(arduinoApi, motorOne, motorTwo, MANUAL): # for consistency it'
 					#break
 					#screen.addstr(0, 0, 'st manu     ')
 				# Begin rover movement
-				motorOne.directionSet("W", a)
-				motorTwo.directionSet("W", a)
+				motorOne.directionSet("W", arduinoApi)
+				motorTwo.directionSet("W", arduinoApi)
 				for x in range(0, 52):
-				    M1.pwmSet(5*x, a)
-				    M2.pwmSet(5*x, a)
+				    motorOne.pwmSet(5*x, arduinoApi)
+				    motorTwo.pwmSet(5*x, arduinoApi)
 				    sleep(0.01)
 				MANUALDRIVE = False
+				# shut down cleanly
+				curses.nocbreak(); screen.keypad(0); curses.echo()
+				curses.endwin()
 				return True
 				break
 
@@ -55,13 +58,16 @@ def manualControl(arduinoApi, motorOne, motorTwo, MANUAL): # for consistency it'
 					motorOne.stopAll(arduinoApi)
 					motorTwo.stopAll(arduinoApi)
 					# Begin rover movement
-					motorOne.directionSet("W", a)
-					motorTwo.directionSet("W", a)
-					for x in range(0, 52):
-				   		motorOne.pwmSet(5*x, a)
-				   		motorTwo.pwmSet(5*x, a)
-				    		sleep(0.01)
+					# motorOne.directionSet("W", arduinoApi)
+					# motorTwo.directionSet("W", arduinoApi)
+					# for x in range(0, 52):
+				   	#	motorOne.pwmSet(5*x, arduinoApi)
+				   	#	motorTwo.pwmSet(5*x, arduinoApi)
+				    	#	sleep(0.01)
 					MANUALDRIVE = False
+					# shut down cleanly
+					curses.nocbreak(); screen.keypad(0); curses.echo()
+					curses.endwin()
 	        			break
 	      	 		elif char == ord('d'): # right
 					screen.addstr(0, 0, 'Right Turn    ')
@@ -98,8 +104,6 @@ def manualControl(arduinoApi, motorOne, motorTwo, MANUAL): # for consistency it'
 						motorOne.pwmSet(5*x, arduinoApi)
 						motorTwo.pwmSet(5*x, arduinoApi)
 						sleep(0.002)
-
-
 				elif char == ord('e'): # stop
 					screen.addstr(0, 0, 'Stop     ')
 					motorOne.stopAll(arduinoApi)
@@ -108,13 +112,21 @@ def manualControl(arduinoApi, motorOne, motorTwo, MANUAL): # for consistency it'
 
 			else:	
 				screen.addstr(0, 0, 'now auto   ')
-	finally:
+	except KeyboardInterrupt:
 		# shut down cleanly
 		curses.nocbreak(); screen.keypad(0); curses.echo()
 		curses.endwin()
 		sys.exit()
-		# motorOne.stopAll(arduinoApi)
-		# motorTwo.stopAll(arduinoApi)
-		return True
+		motorOne.stopAll(arduinoApi)
+		motorTwo.stopAll(arduinoApi)
+		MANUALDRIVE = False
+		# Begin rover movement
+		#motorOne.directionSet("W", arduinoApi)
+		#motorTwo.directionSet("W", arduinoApi)
+		#for x in range(0, 52):
+		#    motorOne.pwmSet(5*x, arduinoApi)
+		#    motorTwo.pwmSet(5*x, arduinoApi)
+		#    sleep(0.01)
+		
 
 

@@ -29,5 +29,5 @@ M2 = Motor("RIGHT", M2En, M2A, M2B)
 M1.pinSet(a)
 M2.pinSet(a)
 
-manualControl(a, M1, M2, MANUAL)
-print(manualControl(a, M1, M2, MANUAL))
+AUTO = manualControl(a, M1, M2, MANUAL)
+print(AUTO)

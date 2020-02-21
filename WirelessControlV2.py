@@ -61,129 +61,129 @@ for x in range(0, 52):
 AUTO = True
 MANUAL = True
 
-while True:
+while AUTO:
 	try:
 		try:
-			while AUTO:
-				sleep(0.5)
-				nav.position()
-				x1 = x2
-				y1 = y2
-				x2 = nav.position()[1]
-				y2 = nav.position()[2]
-				#print'X: ', x2 
-				#print'Y: ', y2
- 	    			#print(xArr[waypointIteration])
- 				#print(yArr[waypointIteration])
+			sleep(0.5)
+			nav.position()
+			x1 = x2
+			y1 = y2
+			x2 = nav.position()[1]
+			y2 = nav.position()[2]
+			#print'X: ', x2 
+			#print'Y: ', y2
+	    			#print(xArr[waypointIteration])
+				#print(yArr[waypointIteration])
 
+			# The points below are the conditions for the rover to know to set its current position as its new home
+			# and to set the next waypoint's x and y-coordinates to xFinal and yFinal
+			# since it will be starting by the door the next waypoint will be the tape by the machine shop door
+			# xFinal and yFinal will be updated to the next waypoint when the rover reaches the first waypoint
+			xFinal = xArr[waypointIteration]
+			yFinal = yArr[waypointIteration]
+		
+			# Find the angle between the x-axis and the vector created by rover's velocity
+			velocityTheta = trig.theta(x1, y1, x2, y2)
 
-				# The points below are the conditions for the rover to know to set its current position as its new home
-				# and to set the next waypoint's x and y-coordinates to xFinal and yFinal
-				# since it will be starting by the door the next waypoint will be the tape by the machine shop door
-				# xFinal and yFinal will be updated to the next waypoint when the rover reaches the first waypoint
-				xFinal = xArr[waypointIteration]
-				yFinal = yArr[waypointIteration]
-			
-				# Find the angle between the x-axis and the vector created by rover's velocity
-				velocityTheta = trig.theta(x1, y1, x2, y2)
+			# Find the angle between the x-axis and the waypoint vector
+			waypointTheta = trig.theta(x2, y2, xFinal, yFinal)
+
+			# Find the difference between the desination theta and velocity theta
+			error = waypointTheta - velocityTheta
+			if (abs(error) < angleBuffer):
+				correctionError = waypointTheta - velocityTheta
+				print'Correction Error:', correctionError
+					
+			#if (abs(error) < angleBuffer):
+			#	print'angleBuffer - abs(error)', angleBuffer-abs(error)
+			#	sleep(1)
+			#	error = waypointTheta - velocityTheta
+			#	sleep(1)
+			#	print'Error', error
+			else:
+				print'Error larger than buffer, ignoring error.'
 	
-				# Find the angle between the x-axis and the waypoint vector
-				waypointTheta = trig.theta(x2, y2, xFinal, yFinal)
-
-				# Find the difference between the desination theta and velocity theta
-				error = waypointTheta - velocityTheta
-
-				if (abs(error) < angleBuffer):
-					correctionError = waypointTheta - velocityTheta
-					print'Correction Error:', correctionError
-						
-					#if (abs(error) < angleBuffer):
-					#	print'angleBuffer - abs(error)', angleBuffer-abs(error)
-					#	sleep(1)
-					#	error = waypointTheta - velocityTheta
-					#	sleep(1)
-					#	print'Error', error
-				else:
-					print'Error larger than buffer, ignoring error.'
-	
-				if (xFinal-buffer <= nav.position()[1] <= xFinal+buffer):
-					if (yFinal-buffer <= nav.position()[2] <= yFinal+buffer):
-						error = 0
-						print'Stop!'
-						for x in range(0, 52):
-							M1.pwmSet(255-5*x, a)
-							M2.pwmSet(255-5*x, a)
-							print(255-5*x)
-							sleep(0.00001)
-						print'Current X:', nav.position()[1], 'Current Y:', nav.position()[2]
-						print'xFinal:', xFinal, 'yFinal:', yFinal
-						print'WAYPOINT:', x+1, 'REACHED'
-						sleep(0.5)
-						print'Turning Right'
-						for x in range(0, 255):
-							M1.pwmSet(x, a)
-							print'Motor 1 PWM:', x
-							sleep(0.01)
-
+			if (xFinal-buffer <= nav.position()[1] <= xFinal+buffer):
+				if (yFinal-buffer <= nav.position()[2] <= yFinal+buffer):
+					error = 0
+					print'Stop!'
+					for x in range(0, 52):
+						M1.pwmSet(255-5*x, a)
+						M2.pwmSet(255-5*x, a)
+						print(255-5*x)
+						sleep(0.00001)
+					print'Current X:', nav.position()[1], 'Current Y:', nav.position()[2]
+					print'xFinal:', xFinal, 'yFinal:', yFinal
+					print'WAYPOINT:', x+1, 'REACHED'
+					sleep(0.5)
+					print'Turning Right'
+					for x in range(0, 52):
+						M1.pwmSet(5*x, a)
+						print'Motor 1 PWM:', 5*x
+						sleep(0.01)
 						waypointIteration += 1
-						if (waypointIteration == 4):
-							print'Final waypoint reached. We done.'
+					if (waypointIteration == 4):
+						print'Final waypoint reached. We done.'
+						M1.stopAll(a)
+						M2.stopAll(a)
+						next = raw_input('Continue? [y/n]:')
+						if (next == 'y'):
+							waypointIteration = 0
 							M1.stopAll(a)
 							M2.stopAll(a)
-							next = raw_input('Continue? [y/n]:')
-							if (next == 'y'):
-								waypointIteration = 0
-								M1.stopAll(a)
-								M2.stopAll(a)
-								#sys.exit()
-								AUTO = True
-								break
-							elif (next == 'n'):
-								print'Exiting program...'
-								print'If program fails to exit enter CTRL+Z.'
-								M1.stopAll(a)
-								M2.stopAll(a)
-								sys.exit()
-								AUTO = False
-								break
-							else:
-								print'Invalid input entered. Exiting program...'
-								print'If program fails to exit enter CTRL+Z.'
-								M1.stopAll(a)
-								M2.stopAll(a)
-								AUTO = False
-								break
-						sleep(2)
-						print'Proceed.'
-						for x in range(0, 52):
-							M1.pwmSet(5*x, a)
-							M2.pwmSet(5*x, a)
-							sleep(0.0001)
-						sleep(2)
-						break
+							#sys.exit()
+							AUTO = True
+							break
+						elif (next == 'n'):
+							print'Exiting program...'
+							print'If program fails to exit enter CTRL+Z.'
+							M1.stopAll(a)
+							M2.stopAll(a)
+							sys.exit()
+							AUTO = False
+							break
+						else:
+							print'Invalid input entered. Exiting program...'
+							print'If program fails to exit enter CTRL+Z.'
+							M1.stopAll(a)
+							M2.stopAll(a)
+							AUTO = False
+							break
 
-				if (correctionError > 0):
-					print'Correct Right!' # Got rid of exclamation points cuz Mackenzie rude af
-					print'ERROR for Right turn:', correctionError
-					rightSlow = 255 - correctionError * motorK
-					print'Decreasing Right Motor:', rightSlow
-					M1.pwmSet(rightSlow, a)
-					M2.pwmSet(maxPWM, a)		
+					sleep(2)
+					print'Proceed.'
+					M1.directionSet("W", a)
+					M2.directionSet("W", a)
+					for x in range(0, 52):
+						M1.pwmSet(5*x, a)
+						M2.pwmSet(5*x, a)
+						sleep(0.0001)
+					sleep(2)
+					break
+
+			if (correctionError > 0):
+				print'Correct Right!' # Got rid of exclamation points cuz Mackenzie rude af
+				print'ERROR for Right turn:', correctionError
+				rightSlow = 255 - correctionError * motorK
+				print'Decreasing Right Motor:', rightSlow
+				M1.pwmSet(rightSlow, a)
+				M2.pwmSet(maxPWM, a)		
 	
-				if (correctionError < 0):
-					print'Correct Left!' 
-					print'ERROR for Left turn:', correctionError
-					leftSlow = 255 + correctionError * motorK # sign here is positive because the angle is negative
-					print'Decreasing Left Motor:', leftSlow
-					M1.pwmSet(maxPWM, a)
-					M2.pwmSet(leftSlow, a)
+			if (correctionError < 0):
+				print'Correct Left!' 
+				print'ERROR for Left turn:', correctionError
+				leftSlow = 255 + correctionError * motorK # sign here is positive because the angle is negative
+				print'Decreasing Left Motor:', leftSlow
+				M1.pwmSet(maxPWM, a)
+				M2.pwmSet(leftSlow, a)
 	
 		except KeyboardInterrupt:
 			M1.stopAll(a)
 			M2.stopAll(a)
 			manualControl(a, M1, M2, MANUAL) # This sends the code into Manual Control
 			AUTO = manualControl(a, M1, M2, MANUAL)		# For more info refer to ManualControl.py
-
+			print'HERE'
+	
 	except KeyboardInterrupt:
 		M1.stopAll(a)
 		M2.stopAll(a)
