@@ -10,12 +10,12 @@ import sys
 
 a = nanpyConnect()
 
-M1En = 6
-M1A = 7
-M1B = 8
+M1En = 3
+M1A = 4
+M1B = 5
 M2En = 11
-M2A = 12
-M2B = 13
+M2A = 9
+M2B = 10
 
 motorK = 2
 maxPWM = 255
@@ -30,4 +30,6 @@ M1.pinSet(a)
 M2.pinSet(a)
 
 AUTO = manualControl(a, M1, M2, MANUAL)
+M1.stopAll(a)
+M2.stopAll(a)
 print(AUTO)

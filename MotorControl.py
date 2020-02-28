@@ -11,7 +11,7 @@ except:
 	print'Failed to Connect to Arduino. :('
 
 M1EnPin = 6 
-M1APin = 7
+M1APin = 4
 M1BPin = 8
 M2EnPin = 11
 M2APin = 12
@@ -27,8 +27,8 @@ M2.pinSet(a)
 # Now let's test some movements
 try:
 	print'Moving FORWARD' # forward turns the motor clockwise
-	M1.directionSet("W", a) # Change these values here to change direction of motors
-	M2.directionSet("W", a) # Change these values here to change direction of motors
+	M1.directionSet("S", a) # Change these values here to change direction of motors
+	M2.directionSet("S", a) # Change these values here to change direction of motors
 	sleep(1)
 
 	print'Speeding Up'
@@ -72,14 +72,14 @@ try:
 	print'Motors Stopped.'
 	sleep(0.5)
 
-	print'Right Turn'
-	M1.directionSet("W", a) # Change these values here to change direction of motors
-	M2.directionSet("S", a) # Change these values here to change direction of motors
+	print'Left Turn'
+	M1.directionSet("S", a) # Change these values here to change direction of motors
+	M2.directionSet("W", a) # Change these values here to change direction of motors
 	sleep(1)
 
 	print'Speeding Up'
 	for x in range(0, 255):
-		M1.pwmSet(x, a)
+		M2.pwmSet(x, a)
 		print(x)
 		sleep(0.01)
 

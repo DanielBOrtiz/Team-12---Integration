@@ -14,7 +14,7 @@ import sys
 a = nanpyConnect()
 
 M1En = 6
-M1A = 7
+M1A = 4
 M1B = 8
 M2En = 11
 M2A = 12
@@ -45,7 +45,7 @@ y2 = 0
 # the buffer below is the leeway we allow the rover's position to account for
 # i.e the position is never 100% accurate so we want a range of values that way once the rover hits those values
 # it will perform some action based off these positions
-buffer = 0.8
+buffer = 0.5
 angleBuffer = 45
 error = 0
 correctionError = 0
@@ -139,23 +139,27 @@ while True:
 									M1.pwmSet(255-5*x, a)
 									M2.pwmSet(255-5*x, a)
 									print(255-5*x)
-									sleep(0.00001)
+									sleep(0.001)
 								print'Current X:', nav.position()[1], 'Current Y:', nav.position()[2]
 								print'xFinal:', xFinal, 'yFinal:', yFinal
 								print'WAYPOINT:', x+1, 'REACHED'
 								sleep(0.5)
 								print'Turning Right'
-								for x in range(0, 255):
-									M1.pwmSet(x, a)
-									print'Motor 1 PWM:', x
+								for x in range(0, 52):
+									M1.pwmSet(5*x, a)
+									print'Motor 1 PWM:', 5*x
 									sleep(0.01)
 								x += 1
-								sleep(2)
+								sleep(1.5)
+								M1.pwmSet(0, a)
+								M2.pwmSet(0, a)
+								M1.directionSet("W", a)
+								M2.directionSet("W", a)
 								print'Proceed.'
 								for x in range(0, 52):
 									M1.pwmSet(5*x, a)
 									M2.pwmSet(5*x, a)
-									sleep(0.0001)
+									sleep(0.001)
 								sleep(2)
 								break
 						if (correctionError > 0):

@@ -69,6 +69,7 @@ def manualControl(arduinoApi, motorOne, motorTwo, MANUAL): # for consistency it'
 					curses.nocbreak(); screen.keypad(0); curses.echo()
 					curses.endwin()
 	        			break
+
 	      	 		elif char == ord('d'): # right
 					screen.addstr(0, 0, 'Right Turn    ')
 					motorOne.directionSet("W", arduinoApi)

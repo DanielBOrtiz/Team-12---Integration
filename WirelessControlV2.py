@@ -14,7 +14,7 @@ import sys
 a = nanpyConnect()
 
 M1En = 6
-M1A = 7
+M1A = 4
 M1B = 8
 M2En = 11
 M2A = 12

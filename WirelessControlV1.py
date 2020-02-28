@@ -10,12 +10,12 @@ import sys
 
 a = nanpyConnect()
 
-M1En = 6
-M1A = 7
-M1B = 8
+M1En = 3
+M1A = 4
+M1B = 5
 M2En = 11
-M2A = 12
-M2B = 13
+M2A = 9
+M2B = 10
 
 motorK = 2
 maxPWM = 255
@@ -32,7 +32,7 @@ nav.position() # line that calls the position of the beacon
 trig = Trig()
 
 # coordinates of each waypoint in the room, starting from door side clockwise.
-xArr = [5.0, 8.0, 5.6, 2.3, 0] # x-coordinates of the waypoints
+xArr = [5.3, 8.0, 5.6, 2.3, 0] # x-coordinates of the waypoints
 yArr = [2.9, -1.5, -3.5, 0.3, 0] # y-coorindates of the waypoints
 x1 = 0
 y1 = 0
@@ -42,7 +42,7 @@ y2 = 0
 # the buffer below is the leeway we allow the rover's position to account for
 # i.e the position is never 100% accurate so we want a range of values that way once the rover hits those values
 # it will perform some action based off these positions
-buffer = 0.8
+buffer = 0.5
 angleBuffer = 45
 error = 0
 correctionError = 0
@@ -59,8 +59,8 @@ MANUAL = True
 
 while True:
 	try:
-		try:
-			for x in range(0, 5):
+		for x in range(0, 5):
+			try:
 				if (x == 4):
 					print'Final waypoint reached. We done.'
 					M1.stopAll(a)
@@ -171,11 +171,12 @@ while True:
 							M1.pwmSet(maxPWM, a)
 							M2.pwmSet(leftSlow, a)
 	
-		except KeyboardInterrupt:
+			except KeyboardInterrupt:
 				M1.stopAll(a)
 				M2.stopAll(a)
 				manualControl(a, M1, M2, MANUAL) # This sends the code into Manual Control
-				AUTO = manualControl(a, M1, M2, MANUAL)		# For more info refer to ManualControl.py
+				AUTO = manualControl(a, M1, M2, MANUAL)	
+	# For more info refer to ManualControl.py
 	except KeyboardInterrupt:
 		M1.stopAll(a)
 		M2.stopAll(a)
