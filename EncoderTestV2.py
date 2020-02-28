@@ -2,10 +2,6 @@ from NanpyConnect import nanpyConnect
 from gpiozero import DigitalInputDevice
 from time import sleep
 
-sampletime = 0.1
-
-#a = nanpyConnect()
-
 class Encoder(object):
     def __init__(self, pin):
         self._value = 0
@@ -20,7 +16,9 @@ class Encoder(object):
     def value(self):
         return self._value
 
+
 e1 = Encoder(17)
+
 while True:
-   	print("e1 {}".format(e1.value))
-    	sleep(0.4)
+    print("e1 {}".format(e1.value))
+    sleep(0.5)

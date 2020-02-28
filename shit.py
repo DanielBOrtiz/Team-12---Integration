@@ -3,19 +3,17 @@ from time import sleep
 from MotorClass import Motor
 
 a = nanpyConnect()
-print(a)
 
-M1En = 3
-M1A = 7
-M1B = 8
-
-
-M1 = Motor("LEFT", M1En, M1A, M1B)
-
+M1EnPin = 5 
+M1APin = 6
+M1BPin = 7
+M2EnPin = 8
+M2APin = 9
+M2BPin = 10
+	
+# Enable and set each motor
+M1 = Motor("LEFT", M1EnPin, M1APin, M1BPin)
 M1.pinSet(a)
 
-M1.directionSet("W", a)
-for x in range(0, 52):
-    M1.pwmSet(5*x, a)
-    sleep(0.01)
-M1.stopAll(a)
+M2 = Motor("RIGHT", M2EnPin, M2APin, M2BPin)
+M2.pinSet(a)

@@ -1,28 +1,25 @@
+## THE FOLLOWING FUNCTION WAS USED TO DERIVE PYGAMECONTROLTEST.PY
+
 import pygame
 from time import sleep
 import os
 from Trig import Trig
 
-pygame.joystick.init()
-pygame.joystick.Joystick(0).init()
-count = pygame.joystick.Joystick(0).get_init()
-pygame.init()
-trig = Trig()
+def psControl(leftJoystick, rightJoystick):
 
-while True:
+	pygame.joystick.init()
+	pygame.joystick.Joystick(0).init()
+	pygame.init()
+	trig = Trig()
 
 	os.putenv('DISPLAY', ':0.0')
 	pygame.init()
 	for event in pygame.event.get(): # User did something.
-       		#if event.type == pygame.QUIT: # If user clicked close.
-            		#done = True # Flag that we are done so we exit this loop.
         	if event.type == pygame.JOYAXISMOTION:
 			pass
-			#print'Left Joystick Position: ', pygame.joystick.Joystick(0).get_axis(1)
-			#print'Right Joystick Position: ', pygame.joystick.Joystick(0).get_axis(4)
 
-	leftJoy = pygame.joystick.Joystick(0).get_axis(1)
-	rightJoy = pygame.joystick.Joystick(0).get_axis(4)
+	leftJoy = pygame.joystick.Joystick(0).get_axis(leftJoystick)
+	rightJoy = pygame.joystick.Joystick(0).get_axis(rightJoystick)
 
 	if leftJoy == 0:
 		leftJoy = 0
@@ -45,7 +42,11 @@ while True:
 		rightJoy *= -1
 	else:
 		rightJoy = trig.map(rightJoy, 0, 1, 0, 255)
-
+	
 	print'Left Joystick Position: ', leftJoy
 	print'Right Joystick Position: ', rightJoy
 	sleep(0.01)
+
+while True:
+
+	joystick = psControl(1, 4)
