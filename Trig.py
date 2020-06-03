@@ -30,8 +30,7 @@ class Trig():
 	 	valueScaled = float(value - leftMin) / float(leftSpan)
 
     		# Convert the 0-1 range into a value in the right range.
-    		return round(rightMin + (valueScaled * rightSpan)) # returns float, turn into int, comma after value will give number of decimals to round to
+    		return round(rightMin + (valueScaled * rightSpan)) 
+		# returns float, turn into int, comma after value will give number of decimals to round to
     
 		## MAPS LEFT VALUES TO RIGHT VALUES BASED ON VALUE = VALUE
-
-
