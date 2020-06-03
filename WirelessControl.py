@@ -102,10 +102,10 @@ while True:
  						#print(yArr[x])
 
 
-						# The points below are the conditions for the rover to know to set its current position as its new home
-						# and to set the next waypoint's x and y-coordinates to xFinal and yFinal
-						# since it will be starting by the door the next waypoint will be the tape by the machine shop door
-						# xFinal and yFinal will be updated to the next waypoint when the rover reaches the first waypoint
+			# The points below are the conditions for the rover to know to set its current position as its new home
+			# and to set the next waypoint's x and y-coordinates to xFinal and yFinal
+			# since it will be starting by the door the next waypoint will be the tape by the machine shop door
+			# xFinal and yFinal will be updated to the next waypoint when the rover reaches the first waypoint
 						xFinal = xArr[x]
 						yFinal = yArr[x]
 			
@@ -173,7 +173,8 @@ while True:
 						if (correctionError < 0):
 							print'Correct Left!' 
 							print'ERROR for Left turn:', correctionError
-							leftSlow = 255 + correctionError * motorK # sign here is positive because the angle is negative
+							leftSlow = 255 + correctionError * motorK 
+							# sign here is positive because the angle is negative
 							print'Decreasing Left Motor:', leftSlow
 							M1.pwmSet(maxPWM, a)
 							M2.pwmSet(leftSlow, a)
