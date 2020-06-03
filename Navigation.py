@@ -23,7 +23,8 @@ class Navigation():
 		self.addr = input("Who is we? ")
     		#self.conn = input("What ACM port is Marvelmind Beacon plugged in to?: ")
    		#self.port = '/dev/ttyACM' + str(self.conn)
-		self.hedge = MarvelmindHedge(tty = 'dev/ttyUSB-MarvelmindBEACON', adr=self.addr, debug=False) # create MarvelmindHedge thread
+		self.hedge = MarvelmindHedge(tty = 'dev/ttyUSB-MarvelmindBEACON', adr=self.addr, debug=False) 
+		# create MarvelmindHedge thread
 		self.hedge.start() # start thread
 	
 	def position(self):
@@ -48,14 +49,17 @@ class Navigation():
 		time.sleep(0.00001)
 		IO.output(self.trigPin, IO.LOW)
 
-		while IO.input(self.echoPin) == 0: # if echo pin has no received a signal after sending a ping through transmitter, start timer
+		while IO.input(self.echoPin) == 0: 
+		# if echo pin has no received a signal after sending a ping through transmitter, start timer
 			startTime = time.time()
 
-		while IO.input(self.echoPin) == 1: # if echo pin receives signal, end timer
+		while IO.input(self.echoPin) == 1: 
+		# if echo pin receives signal, end timer
 			endTime = time.time()
 
 		duration = endTime - startTime # calculate total time signal traveled
-		distance = (duration * 34300) /2 # find distance using speed of sound eq and divding by two to account for there and back
-#		print("Distance:", distance, "cm")
+		distance = (duration * 34300) /2 
+		# find distance using speed of sound eq and divding by two to account for there and back
+		# print("Distance:", distance, "cm")
 		return distance # returns this distance in centimeters
 
